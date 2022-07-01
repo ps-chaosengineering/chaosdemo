@@ -1,0 +1,45 @@
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: chaosdemo
+  labels:
+    app: chaosdemo
+    release: primary
+spec:
+  selector:
+    matchLabels:
+      app: chaosdemo
+      release: primary
+  template:
+    metadata:
+      labels:
+        app: chaosdemo
+        release: primary
+    spec:
+      containers:
+      - name: chaosdemo
+        image: retheshnair/chaosdemo:latest
+        env:
+        - name: DB
+          value: chaosdemo-db
+        - name: VERSION
+          value: "0.0.1"
+        ports:
+        - containerPort: 8080
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 8080
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 8080
+        resources:
+            limits:
+              cpu: 100m
+              memory: 50Mi
+            requests:
+              cpu: 50m
+              memory: 20Mi

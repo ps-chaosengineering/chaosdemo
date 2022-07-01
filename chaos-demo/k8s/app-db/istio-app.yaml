@@ -1,0 +1,49 @@
+---
+
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: chaosdemo
+spec:
+  hosts:
+  - chaosdemo.acme.com
+  - chaosdemo
+  gateways:
+  - chaosdemo
+  http:
+  - route:
+    - destination:
+        host: chaosdemo
+        subset: primary
+        port:
+          number: 80
+
+---
+
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: chaosdemo
+spec:
+  host: chaosdemo
+  subsets:
+  - name: primary
+    labels:
+      release: primary
+
+---
+
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: chaosdemo
+spec:
+  selector:
+    istio: ingressgateway
+  servers:
+  - port:
+      number: 80
+      name: http
+      protocol: HTTP
+    hosts:
+    - chaosdemo.acme.com

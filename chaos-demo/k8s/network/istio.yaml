@@ -1,0 +1,30 @@
+---
+
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: chaosdemo
+spec:
+  hosts:
+  - chaosdemo
+  http:
+  - route:
+    - destination:
+        host: chaosdemo
+        subset: primary
+        port:
+          number: 80
+
+---
+
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: chaosdemo
+spec:
+  host: chaosdemo
+  subsets:
+  - name: primary
+    labels:
+      release: primary
+
